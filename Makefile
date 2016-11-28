@@ -1,4 +1,4 @@
-BUILD_OPTS=-Xlinker -L/usr/lib
+BUILD_OPTS=-Xlinker -L/usr/lib -Xlinker -lmysqlclient
 
 SWIFTC=swiftc
 SWIFT=swift
@@ -10,7 +10,7 @@ endif
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
 	SWIFTC=xcrun -sdk macosx swiftc
-	BUILD_OPTS=-Xlinker -L/usr/local/opt/mariadb/lib -Xlinker -L/usr/local/opt/openssl/lib -Xcc -I/usr/local/include/mysql -Xcc -I/usr/local/include
+	BUILD_OPTS=-Xlinker -L/usr/local/opt/mariadb/lib -Xlinker -L/usr/local/opt/openssl/lib -Xcc -I/usr/local/include/mysql -Xcc -I/usr/local/include -Xlinker -lmysqlclient
 endif
 
 all: debug test
@@ -22,7 +22,7 @@ debug: CONF_ENV=debug
 debug: build_;
 
 build_:
-	$(SWIFT) build -v --configuration $(CONF_ENV) $(BUILD_OPTS)
+	$(SWIFT) build --configuration $(CONF_ENV) $(BUILD_OPTS)
 	
 clean:
 	$(SWIFT) build --clean build
@@ -31,5 +31,5 @@ distclean:
 	$(SWIFT) build --clean dist
 	
 test:
-	$(SWIFT) test -v $(BUILD_OPTS)
+	$(SWIFT) test $(BUILD_OPTS)
 
