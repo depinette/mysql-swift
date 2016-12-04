@@ -141,10 +141,14 @@ public final class Connection {
     }
     
     internal var ping: Bool {
+        
         _ = try? connectIfNeeded()
         guard let mysql = mysql else {
             return false
         }
+        let ping_res = mysql_ping(mysql)
+        //print("ping:\(ping_res)")
+        if ping_res != 0 { dispose() ; _ = try? connectIfNeeded()}
         return mysql_ping(mysql) == 0
     }
     
